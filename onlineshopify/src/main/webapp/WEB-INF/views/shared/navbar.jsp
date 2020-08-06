@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
 <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -17,15 +18,61 @@
                     <li id="about">
                         <a href="${contextRoot}/about">About</a>
                     </li>
-                    <li id="listProducts">
-                        <a href="${contextRoot}/show/all/products">View Products</a> 
-                    </li>
                     <li id="contact">
                         <a href="${contextRoot}/contact">Contact</a>
                     </li>
+                    <li id="listProducts">
+                        <a href="${contextRoot}/showall">View Products</a> 
+                    </li>
+                    <security:authorize access="hasAuthority('ADMIN')">
+	                    <li id="manageProducts">
+	                        <a href="${contextRoot}/manage_products">Manage Products</a> 
+	                    </li>
+                    </security:authorize>
+                </ul>
+                
+                <ul class="nav navbar-nav navbar-right">
+                	<security:authorize access="isAnonymous()">
+	                	<li id="register">
+	                        <a href="${contextRoot}/register">Sign Up</a>
+	                    </li>
+	                    <li id="login">
+	                        <a href="${contextRoot}/login">Login</a>
+	                    </li>
+                    </security:authorize>
+                    <security:authorize access="isAuthenticated()">
+	                    <li class="dropdown">
+	                    	<a href="javascript:void(0)" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="dropdownMenu1">
+	                    		${userModel.fullName}
+	                    		<span class="caret"></span>
+	                    	</a>
+	                    	
+	                    	<ul class="dropdown-menu">
+	                    	    <security:authorize access="hasAuthority('USER')">
+		                    		<li>
+		                    			<a href="${contextRoot}/show_cart">
+		                    				<span class="glyphicon glyphicon-shopping-cart"></span>
+		                    				<span class="badge">${userModel.cart.cart_Lines}</span>
+		                    				- PKR ${userModel.cart.grandTotal}
+		                    			</a>
+		                    		</li>
+		                    		<li class="divider" role="separator"></li>
+	                    		</security:authorize>
+	                    		<li>
+	                    			<a href="${contextRoot}/perform-logout">Logout</a>
+	                    		</li>
+	                    	</ul>
+	                    	
+	                    </li>
+                    </security:authorize>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
+    
+    
+    <script>
+    	window.userRole = '${userModel.role}';
+    </script>

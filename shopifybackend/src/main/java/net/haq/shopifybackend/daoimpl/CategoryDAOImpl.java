@@ -1,68 +1,72 @@
 package net.haq.shopifybackend.daoimpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.haq.shopifybackend.dao.CategoryDAO;
 import net.haq.shopifybackend.dto.Category;
 
 @Repository
+@Transactional
 public class CategoryDAOImpl implements CategoryDAO {
 
-	
-	private static List<Category> catgories = new ArrayList<Category>();
-	
-	static{
-		Category cat1 = new Category();
-		
-		cat1.setId(1);
-		cat1.setName("Mobile");
-		cat1.setDescription("Cheap Mobiles");
-		cat1.setImageURL("img1");
-		
-		Category cat2 = new Category();
-		
-		cat2.setId(2);
-		cat2.setName("Television");
-		cat2.setDescription("Cheap TVs");
-		cat2.setImageURL("img2");
-		
-		Category cat3 = new Category();
-		
-		cat3.setId(3);
-		cat3.setName("Laptops");
-		cat3.setDescription("Cheap Laptops");
-		cat3.setImageURL("img3");
-		
-		Category cat4 = new Category();
-		
-		cat4.setId(4);
-		cat4.setName("Tablets");
-		cat3.setDescription("Cheap Tablets");
-		cat3.setImageURL("img4");
-		
-		catgories.add(cat1);
-		catgories.add(cat2);
-		catgories.add(cat3);
-		catgories.add(cat4);
-		
-	}
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Override
 	public List<Category> list() {
-		// TODO Auto-generated method stub
-		return catgories;
+		String selectActiveCategories = "from Category WHERE active = :active";
+		return sessionFactory
+				 .getCurrentSession()
+				    .createQuery(selectActiveCategories,Category.class)
+				        .setParameter("active", true)
+				           .getResultList();
+	}
+
+	//getting single unique category
+	@Override
+	public Category get(int id) {
+		return sessionFactory.getCurrentSession().get(Category.class,Integer.valueOf(id));
 	}
 
 	@Override
-	public Category get(int id) {
-		// TODO Auto-generated method stub
-		for (Category category : catgories) {
-			if(category.getId() == id) return category;
+	public boolean add(Category category) {
+		try{
+			//add the category to the database
+			sessionFactory.getCurrentSession().persist(category);
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
-		return null;
+	}
+
+	//updating a category based on id
+	@Override
+	public boolean update(Category category) {
+		try{
+			sessionFactory.getCurrentSession().update(category);
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
+		
+	}
+
+	@Override
+	public boolean delete(Category category) {
+		category.setActive(false);
+		try{
+			sessionFactory.getCurrentSession().update(category);
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 
 }
