@@ -41,7 +41,7 @@
 	                    </li>
                     </security:authorize>
                     <security:authorize access="isAuthenticated()">
-	                    <li class="dropdown">
+	                    <li class="dropdown" id="userCart">
 	                    	<a href="javascript:void(0)" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="dropdownMenu1">
 	                    		${userModel.fullName}
 	                    		<span class="caret"></span>

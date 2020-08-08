@@ -48,9 +48,8 @@ public class CartLineDAOImpl implements CartLineDAO{
 
 	@Override
 	public boolean delete(CartLine cartLine) {
-		cartLine.setAvailable(false);
 		try{
-			sessionFactory.getCurrentSession().update(cartLine);
+			sessionFactory.getCurrentSession().delete(cartLine);
 			return true;
 		}catch (Exception e) {
 			e.printStackTrace();

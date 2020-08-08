@@ -21,6 +21,9 @@ $(function(){
 			break;
 		case 'Manage Products':
 			$('#manageProducts').addClass('active');
+			break;
+		case 'User Cart':
+			$('#userCart').addClass('active');
 			break;	
 		default:
 			if(menu == "Home")break;
@@ -310,5 +313,39 @@ $(function(){
 		});
 		
 	}//validate if login form
+	
+	//-------------
+	//handling the click event of refresh cart button
+	$('button[name="refreshCart"]').click(function(){
+		//fetch the CartLine ID
+		var cartLineId = $(this).attr('value');
+		var countElmnt = $('#count_' + cartLineId);
+		
+		var originalCount = countElmnt.attr('value');
+		var currentCount  = countElmnt.val();
+		
+		//work only when the count has changed
+		if(currentCount != originalCount){
+			console.log('Current Count '+currentCount);
+			console.log('Orginal Count '+originalCount);
+			
+			if(currentCount < 1 || currentCount > 3){
+				//reverting back the original count
+				//cannot be above 3 and below 1 
+				countElmnt.val(originalCount);
+				bootbox.alert({
+					size : 'medium',
+					title: 'ERROR',
+					message: 'Product Count shoud be Minimum 1 and Maximum 3!'
+				});
+			}else{
+				updateURL = window.context +'/cart/'+ cartLineId +'/update?count='+currentCount;
+				window.location.href = updateURL;
+			}
+		}
+	});
+	
+	
+	//-------------
 	
 });

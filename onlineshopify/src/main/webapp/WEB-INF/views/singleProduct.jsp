@@ -48,7 +48,7 @@
 					<span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</strike></a> &#160;
 				</c:when>
 				<c:otherwise>
-					<a href="${contextRoot}/json/data/cart/add/${product.product_id}" class="btn btn-success">
+					<a href="${contextRoot}/cart/add/${product.product_id}/product" class="btn btn-success">
 					<span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</a> &#160;
 				</c:otherwise>
 			</c:choose>

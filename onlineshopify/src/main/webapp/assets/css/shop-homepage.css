@@ -197,3 +197,12 @@ border-radius: 50%;
 }
 
 /*Cart Css*/
+
+.cartImg{
+	width : 100px;
+	height: 100px;
+}
+
+.unavailable{
+	color: red;
+}
